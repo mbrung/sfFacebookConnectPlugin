@@ -6,14 +6,18 @@ The sfFacebookConnect plugin :
   * helps easily setup a Facebook Connect authentification on a symfony project using sfGuardUser
 
   * is also a good wrapper to create a Facebook application using symfony
+  
+I updated the initial implementation to work better with Symfony 1.4 and DoctrineGuard,
+where profile data is handled a bit differently (e.g. SfGuardUser has an email_address field).
 
 Installation
 ------------
 
 
-  * Install the plugin
+  * Install the plugin by cloning the GIT repository:
 
-        $ svn co http://svn.symfony-project.com/plugins/sfFacebookConnectPlugin/trunk sfFacebookConnectPlugin
+        $ cd plugins
+        $ git://github.com/mbrung/sfFacebookConnectPlugin.git sfFacebookConnectPlugin
 
 
   * Create your application on Facebook
@@ -50,29 +54,14 @@ Installation
             user_permissions: []         
 
 
-  * Modify your `sfGaurdUserProfile` schema to add the 3 new columns needed
+  * Modify your `sfGuardUser` schema to add the 2 new columns needed
 
         [yml]
         # Doctrine schema sample
-        sfGuardUserProfile:
-          tableName:     sf_guard_user_profile
+        sfGuardUser:
           columns:
-            user_id:          integer(4)
-            first_name:       varchar(20)
-            last_name:        varchar(20)
             facebook_uid:     integer(4)
-            email:            varchar(255)
             email_hash:       varchar(255)
-          relations:
-            sfGuardUser:
-              type: one
-              foreignType: one
-              class: sfGuardUser
-              local: user_id
-              foreign: id
-              onDelete: cascade
-              foreignAlias: Profile
-
 
   * Enable the auth module in your `settings.yml`: `sfFacebookConnectAuth`
 
@@ -87,8 +76,6 @@ Installation
         all:
           .settings:
             enabled_modules:      [default, sfFacebookConnectAuth, sfFacebookConnectDemo]
-
-  * Eventually make `myUser.class.php` extend `sfFacebookUser`
 
   * Eventually use the sfFacebook filters
   
